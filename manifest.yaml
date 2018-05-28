@@ -1,0 +1,128 @@
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: backend-demo
+  labels:
+    app: backend-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-demo
+  template:
+    metadata:
+      labels:
+        app: backend-demo
+    spec:
+      containers:
+      - name: backend-demo
+        image: nshazly/microservice-demo:latest
+        args: ["backend.py"]
+        ports:
+        - containerPort: 8080
+        
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: middleware-demo
+  labels:
+    app: middleware-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: middleware-demo
+  template:
+    metadata:
+      labels:
+        app: middleware-demo
+    spec:
+      containers:
+      - name: middleware-demo
+        image: nshazly/microservice-demo:latest
+        args: ["middleware.py"]
+        ports:
+        - containerPort: 8080
+        env:
+        - name: BACKEND_SERVICE
+          value: http://backend-service
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: frontend-demo
+  labels:
+    app: frontend-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend-demo
+  template:
+    metadata:
+      labels:
+        app: frontend-demo
+    spec:
+      containers:
+      - name: frontend-demo
+        image: nshazly/microservice-demo:latest
+        args: ["frontend.py"]
+        ports:
+        - containerPort: 8080
+        env:
+        - name: MIDDLEWARE_SERVICE
+          value: http://middleware-service
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: backend-demo
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: backend-service
+spec:
+  type: ClusterIP
+  selector:
+    app: backend-demo
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: middleware-service
+spec:
+  type: ClusterIP
+  selector:
+    app: middleware-demo
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: frontend-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: frontend-demo
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+

@@ -36,7 +36,7 @@ def get_time():
 			return "Backend response --> {}".format(t.text)
 	else:
 		logging.error(t.status_code, t.text)
-		return "<p>Error {} : </p>".format(t.status_code, t.text)
+		return "<p>Error {} : </p>".format(t.status_code, "Time service unavailable")
 
 if __name__ == "__main__":
 	app.run(host="0.0.0.0", port=os.getenv("PORT", 8080))
