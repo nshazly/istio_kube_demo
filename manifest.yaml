@@ -83,7 +83,7 @@ spec:
   selector:
     app: backend-demo
   ports:
-  - protocol: TCP
+  - name: http
     port: 80
     targetPort: 8080
 ---
@@ -96,7 +96,7 @@ spec:
   selector:
     app: middleware-demo
   ports:
-  - protocol: TCP
+  - name: http
     port: 80
     targetPort: 8080
 ---
@@ -109,7 +109,7 @@ spec:
   selector:
     app: frontend-demo
   ports:
-  - protocol: TCP
+  - name: http
     port: 80
     targetPort: 8080
 ---

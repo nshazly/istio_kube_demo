@@ -3,7 +3,7 @@ import datetime as dt
 
 from flask import Flask, Response, request
 from requests import get
-from helpers import fail, set_headers
+from helpers import fail, get_forward_headers
 
 app = Flask(__name__)
 
@@ -17,9 +17,8 @@ def hello():
 
 @app.route("/time")
 def get_time():
-	h = set_headers(request.headers)
-	t = get(MIDDLEWARE_SERVICE + "/time", headers=h)
-	f = h.get('fail')
+	t = get(MIDDLEWARE_SERVICE + "/time", headers=get_forward_headers(request))
+	f = request.headers.get('fail')
 
 	if t.ok:
 		if fail(f):
