@@ -1,5 +1,5 @@
 ---
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend-demo
@@ -23,7 +23,7 @@ spec:
         - containerPort: 8080
         
 ---
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: middleware-demo
@@ -49,7 +49,7 @@ spec:
         - name: BACKEND_SERVICE
           value: http://backend-service
 ---
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend-demo
@@ -90,19 +90,6 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: backend-service
-spec:
-  type: ClusterIP
-  selector:
-    app: backend-demo
-  ports:
-  - protocol: TCP
-    port: 80
-    targetPort: 8080
----
-kind: Service
-apiVersion: v1
-metadata:
   name: middleware-service
 spec:
   type: ClusterIP
@@ -125,4 +112,14 @@ spec:
   - protocol: TCP
     port: 80
     targetPort: 8080
-
+---
+apiVersion: config.istio.io/v1alpha2
+kind: EgressRule
+metadata:
+  name: jsontest-egress-rule
+spec:
+  destination:
+    service: time.jsontest.com
+  ports:
+    - port: 80
+      protocol: http
