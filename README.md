@@ -25,9 +25,9 @@ This will create 3 deployments and services. The frontend service will provision
     # to display the external ip address
     kubectl get svc frontend-service
 
-What is the rate of failure for 3 services if each ahs a 0.3 probability of failing ?
+What is the rate of failure for 3 services if each has a 0.3 probability of failing ?
 
-You add the probabliities of any 1 service failing plus any 2 services failing and all services failing:
+You add p(any 1 service fails) plus p(any 2 services fail) plus p(all services fail):
 
 	1(0.3^3) + 3(0.3^2 + 0.7) + 3(0.3 * 0.7^2) =  0.6569999999999999
 
