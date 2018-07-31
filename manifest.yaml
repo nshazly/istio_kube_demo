@@ -4,16 +4,22 @@ kind: Deployment
 metadata:
   name: backend-demo
   labels:
-    app: backend-demo
+    app: istio-kube-demo
+    service: backend-demo
+    tier: backend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: backend-demo
+      app: istio-kube-demo
+      service: backend-demo
+      tier: backend
   template:
     metadata:
       labels:
-        app: backend-demo
+        app: istio-kube-demo
+        service: backend-demo
+        tier: backend
     spec:
       containers:
       - name: backend-demo
@@ -28,16 +34,22 @@ kind: Deployment
 metadata:
   name: middleware-demo
   labels:
-    app: middleware-demo
+    app: istio-kube-demo
+    service: middleware-demo
+    tier: middleware
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: middleware-demo
+      app: istio-kube-demo
+      service: middleware-demo
+      tier: middleware
   template:
     metadata:
       labels:
-        app: middleware-demo
+        app: istio-kube-demo
+        service: middleware-demo
+        tier: middleware
     spec:
       containers:
       - name: middleware-demo
@@ -54,16 +66,22 @@ kind: Deployment
 metadata:
   name: frontend-demo
   labels:
-    app: frontend-demo
+    app: istio-kube-demo
+    service: frontend-demo
+    tier: frontend
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: frontend-demo
+      app: istio-kube-demo
+      service: frontend-demo
+      tier: frontend
   template:
     metadata:
       labels:
-        app: frontend-demo
+        app: istio-kube-demo
+        service: frontend-demo
+        tier: frontend
     spec:
       containers:
       - name: frontend-demo
@@ -81,7 +99,9 @@ metadata:
   name: backend-service
 spec:
   selector:
-    app: backend-demo
+    app: istio-kube-demo
+    service: backend-demo
+    tier: backend
   ports:
   - protocol: TCP
     port: 80
@@ -94,7 +114,9 @@ metadata:
 spec:
   type: ClusterIP
   selector:
-    app: middleware-demo
+    app: istio-kube-demo
+    service: middleware-demo
+    tier: middleware
   ports:
   - protocol: TCP
     port: 80
@@ -107,19 +129,21 @@ metadata:
 spec:
   type: LoadBalancer
   selector:
-    app: frontend-demo
+    app: istio-kube-demo
+    service: frontend-demo
+    tier: frontend
   ports:
   - protocol: TCP
     port: 80
     targetPort: 8080
 ---
-apiVersion: config.istio.io/v1alpha2
-kind: EgressRule
-metadata:
-  name: jsontest-egress-rule
-spec:
-  destination:
-    service: time.jsontest.com
-  ports:
-    - port: 80
-      protocol: http
+#apiVersion: config.istio.io/v1alpha2
+#kind: EgressRule
+#metadata:
+#name: jsontest-egress-rule
+#spec:
+#  destination:
+#    service: time.jsontest.com
+#  ports:
+#    - port: 80
+#      protocol: http
